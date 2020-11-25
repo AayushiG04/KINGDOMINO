@@ -1,0 +1,200 @@
+import static java.lang.System.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+public class DominoPicturePanel extends JPanel implements MouseListener {
+
+	private BufferedImage p1, p2, p3, p4;
+	
+	public DominoPicturePanel() {
+		
+		try {
+	
+			p1 = ImageIO.read(getClass().getResource("dom34V.png"));
+			p2 = ImageIO.read(getClass().getResource("dom34H.png"));
+			p3 = ImageIO.read(getClass().getResource("dom43V.png"));
+			p4 = ImageIO.read(getClass().getResource("dom43H.png"));
+		} catch (Exception e) {
+			System.out.print(e);
+		}
+		addMouseListener(this);
+	}
+	
+	public void paint(Graphics g) {
+		
+		g.drawImage(p1, getWidth()/6*3-100, getHeight()/2-100, getWidth()/24, getHeight()/6, null); //middle
+		
+/*		horizontal [W/12 | H/12]  | L-R = x + W/24 
+		vertical [W/24 | H/6] | U-D = y - y + H/12
+ 		
+ 		  - To make this method work, make sure to add a String to Domino class 
+ 		    to tell which orientation it is so we could use it for voh (vertical or horizontal).
+ 		  
+ 		  - As the game goes on we'll make sure to use direction to move the Domino.
+ 		  
+ 		  -Use isPlayable() to test to make sure the move is correct before making it. 
+ 		   For this, I was thinking we log the cords for the domino in the Domino class too. 
+ 		   
+ 		   hm = horizontal movement | vm = vertical movement
+ 		  
+ */
+		
+		move(g, p3, getWidth()/6*3-100, getHeight()/2-100, "v","u");
+//		move(g, p3, getWidth()/6*3-100, getHeight()/2-100, "v","d");
+//		move(g, p3, getWidth()/6*3-100, getHeight()/2-100, "v","l");
+//		move(g, p3, getWidth()/6*3-100, getHeight()/2-100, "v","r");
+		
+	}
+	
+		public boolean checkCords(int xcord, int ycord) {
+		
+		Domino[][] kingdom = new Domino[10][10]; // replace this with the 10x10 kingdom
+		for (int r = 0; r < kingdom.length; r++) {
+			for (int c = 0; c < kingdom[r].length) {
+				
+				Domino temp = Domino[r][c];
+				
+				int xc = temp.getX(), yc = temp[r][c].getY(), xct = temp.getX2(),yct = temp.getY2();
+				
+				if(xcord >= xc &&  ycord >= yc && xcord <= xct && ycord <= yct) {
+					return true;
+				}
+					
+				}
+				
+				
+			}
+		return false;
+		}
+		
+
+	public void move(Graphics g, BufferedImage img, int x, int y, String voh, String direction) {
+		
+		if (voh.toLowerCase().equals("v")) {
+			
+			int hm = getWidth()/24, vm = getHeight()/6;
+			
+			if(direction == ("r")) { 
+				
+				if(checkCords(x+hm, y) == true) {
+					g.drawImage(img, x+hm, y, hm, vm, null);
+					}
+				
+				} else if (direction == ("l") == true) { 
+					
+					if(checkCords(x-hm, y)) {
+						g.drawImage(img, x-hm, y, hm, vm, null);
+					}
+					
+				} else if (direction == ("u")) { 
+					
+					if(checkCords(x, y-vm) == true) {
+						g.drawImage(img, x, y-vm, hm, vm, null);
+					}
+					
+				
+				} else if (direction == ("d")) { 
+					
+					if(checkCords(x, y+vm)) {
+						g.drawImage(img, x, y+vm, hm, vm, null);
+					}
+					
+			} else System.out.println("Invalid Direction.");
+			
+		} else if (voh.toLowerCase() == ("h")) {
+			
+			int hm = getWidth()/12, vm = getHeight()/12;
+			
+			if(direction == ("r")) { 
+				
+				if(checkCords(x + hm, y) == true) {
+					g.drawImage(img, x+hm, y, hm, vm, null); 
+				}
+				
+					
+				} else if (direction == ("l")) { 
+					
+					if(checkCords(x-hm, y) == true) {
+						g.drawImage(img, x-hm, y, hm, vm, null);
+					}
+					
+					
+				} else if (direction == ("u")) { 
+					
+					if(checkCords(x, y-vm) == true) {
+						g.drawImage(img, x, y-vm, hm, vm, null);
+					}
+					
+					
+				} else if (direction == ("d")) { 
+					
+					if(checkCords(x, y+vm) == true) {
+						g.drawImage(img, x, y+vm, hm, vm, null);
+					}
+					
+					
+			} else System.out.println("Invalid Direction.");
+		}
+		
+		}
+
+	
+	public void mouseClicked1(MouseEvent e) {
+		
+		int x = e.getX(), y = e.getY();
+		
+		if(e.getButton() == e.BUTTON1) {
+//			System.out.println(x + " " + y);
+		}
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+		
+	
+}
+
+
+
+
