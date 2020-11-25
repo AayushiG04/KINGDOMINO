@@ -1,0 +1,131 @@
+import java.awt.image.BufferedImage;
+
+public class Domino {
+
+	private static String t, b, r;
+	private static int n, x, y, x2, y2;
+	private static boolean crown;
+	private BufferedImage image;
+	private int num;
+	private Square one, two;
+	
+	public Domino(BufferedImage img, int num, String top, String bottom, int num1, int xcord, int ycord, int xt, int yt) {
+		t = top; b = bottom; n = num1;
+		x = xcord; y = ycord;
+		x2 = xt; y2 = yt;
+		image = img;
+		this.num = num1;
+	}
+	
+	public Domino(BufferedImage img, int num1, String top, String bottom) {
+		t = top; b = bottom; n = num;
+		image = img;
+		this.num = num1;
+		
+	}
+	
+	public Domino(BufferedImage image, int num1, Square one, Square two)
+	{
+		this.one = one;
+		this.two = two;
+		this.image = image;
+		num = num1;
+	}
+	
+	public Domino(String top, String bottom, int num) {
+		t = top; 
+		b = bottom;
+		n = num;
+	}
+	
+	public BufferedImage getImage()
+	{
+		return image;
+	}
+	
+	public String getTop() {
+		return t;
+	}
+	
+	public String getBottom() {
+		return b;
+	}
+	
+	public int getNum() {
+		return n;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y; 
+	}
+	
+	public int getX2() {
+		return x2;
+	}
+	
+	public int getY2() {
+		return y2;
+	}
+	
+	
+	public boolean hasACrown() {
+		if (crown == true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void rotate() {
+		String temp = b;
+		b = t; t = temp;
+		
+		if (r == "v") {
+			r = "h";
+		} else {
+			r ="v";
+		}
+		
+	}
+	
+	public void setCrown() {
+		crown = true;
+	}
+	
+	public void setNumber(int number) {
+		n = number;
+	}
+	
+	public void setX(int X) {
+		x = X;
+	} 
+	
+	public void setY(int Y) {
+		y = Y;
+	}
+	
+	public void setX2(int xx) {
+		x2 = xx;
+	}
+	
+	public void setY2(int yy) {
+		y2 = yy;
+	}
+	
+ 	
+	public Boolean isPlayable(Domino dom) {
+		if(t == dom.getTop() || t == dom.getBottom() 
+		|| b == dom.getBottom() || b == dom.getTop()) {
+			return true;
+		}
+		return false;
+	}
+	
+}
+
+
+
