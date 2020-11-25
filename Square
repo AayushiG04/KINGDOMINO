@@ -1,0 +1,13 @@
+
+public class Square {
+	
+	private boolean crown;
+	private String terrain;
+	
+	public Square(boolean crown, String terrain)
+	{
+		this.crown = crown;
+		this.terrain = terrain;
+	}
+
+}
