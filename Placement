@@ -1,0 +1,257 @@
+public class Placement 
+{
+	private String[][] board; //change to 10x10
+	String emptyVal = "B";
+	String upCommand = "Up";
+	String downCommand = "Down";
+	String rightCommand = "Right";
+	String leftCommand = "Left";
+	
+	public Placement()
+	{
+		board = new String[5][5];
+		
+		for(int i = 0; i < board.length; i++)
+		{
+			for(int j = 0; j < board[i].length; j++)
+			{
+				board[i][j] = emptyVal;
+			}
+		}
+		board[2][2] = "K";
+	}
+	
+	public Placement(String[][] boardSet) //
+	{
+		board = boardSet;
+	}
+	
+	public String getBoard(int x, int y)
+	{
+		return board[x][y];
+	}
+	
+	public void moveBoard(String command)
+	{
+		if(command.contentEquals(upCommand))
+		{
+			shiftUp();
+		}
+		else if(command.contentEquals(downCommand))
+		{
+			shiftDown();
+		}
+		else if(command.contentEquals(rightCommand))
+		{
+			shiftRight();
+		}
+		else if(command.contentEquals(leftCommand))
+		{
+			shiftLeft();
+		}
+	}
+	
+	public void shiftRight()
+	{
+		int test = 0;
+		for(int i = 0; i < board.length; i++)
+		{
+			if(!board[i][4].contentEquals(emptyVal))
+			{
+				test = 1;
+			}
+		}
+		
+		if(test == 0)
+		{
+			for(int i = 0; i < board.length; i++)
+			{
+				String tempString = board[i][3];
+				board[i][4] = tempString;
+				tempString = board[i][2];
+				board[i][3] = tempString;
+				tempString = board[i][1];
+				board[i][2] = tempString;
+				tempString = board[i][0];
+				board[i][1] = tempString;
+				board[i][0] = emptyVal;
+			}
+		}
+	}
+	public void shiftLeft()
+	{
+		int test = 0;
+		for(int i = 0; i < board.length; i++)
+		{
+			if(!board[i][0].contentEquals(emptyVal))
+			{
+				test = 1;
+			}
+		}
+		
+		if(test == 0)
+		{
+			for(int i = 0; i < board.length; i++)
+			{
+				String tempString = board[i][1];
+				board[i][0] = tempString;
+				tempString = board[i][2];
+				board[i][1] = tempString;
+				tempString = board[i][3];
+				board[i][2] = tempString;
+				tempString = board[i][4];
+				board[i][3] = tempString;
+				board[i][4] = emptyVal;
+			}
+		}
+	}
+	public void shiftDown()
+	{
+		int test = 0;
+		for(int i = 0; i < board.length; i++)
+		{
+			if(!board[4][i].contentEquals(emptyVal))
+			{
+				test = 1;
+			}
+		}
+		
+		if(test == 0)
+		{
+			for(int i = 0; i < board.length; i++)
+			{
+				String tempString = board[3][i];
+				board[4][i] = tempString;
+				tempString = board[2][i];
+				board[3][i] = tempString;
+				tempString = board[1][i];
+				board[2][i] = tempString;
+				tempString = board[0][i];
+				board[1][i] = tempString;
+				board[0][i] = emptyVal;
+			}
+		}
+	}
+	public void shiftUp()
+	{
+		int test = 0;
+		for(int i = 0; i < board.length; i++)
+		{
+			if(!board[0][i].contentEquals(emptyVal))
+			{
+				test = 1;
+			}
+		}
+		
+		if(test == 0)
+		{
+			for(int i = 0; i < board.length; i++)
+			{
+				String tempString = board[1][i];
+				board[0][i] = tempString;
+				tempString = board[2][i];
+				board[1][i] = tempString;
+				tempString = board[3][i];
+				board[2][i] = tempString;
+				tempString = board[4][i];
+				board[3][i] = tempString;
+				board[4][i] = emptyVal;
+			}
+		}
+	}
+	
+	public void placeADomino(String pivotValue, String secondValue, String rotation, int pivotPosX, int pivotPosY)
+	{
+		int test = 0;
+		if((pivotPosY == 0 && rotation.contentEquals(upCommand) || (pivotPosY == 4 && rotation.contentEquals(downCommand))))
+		{
+			System.out.println("Cannot be placed here");
+			test = 1;
+		}
+		if((pivotPosX == 0 && rotation.contentEquals(leftCommand) || (pivotPosX == 4 && rotation.contentEquals(rightCommand))))
+		{
+			System.out.println("Cannot be placed here");
+			test = 1;
+		}
+		
+		if(test == 0)
+		{
+			String tempValue = board[pivotPosY][pivotPosX];
+			if(tempValue.contentEquals(emptyVal))
+			{
+				board[pivotPosY][pivotPosX] = pivotValue;
+			
+				if(rotation.contentEquals(downCommand))
+				{
+					tempValue = board[pivotPosY+1][pivotPosX];
+					if(tempValue.contentEquals(emptyVal))
+					{
+						board[pivotPosY+1][pivotPosX] = secondValue;
+					}
+					else
+					{
+						board[pivotPosY][pivotPosX] = emptyVal;
+						System.out.println("Overlapping Domino");
+					}
+				}
+				else if(rotation.contentEquals(upCommand))
+				{
+					tempValue = board[pivotPosY-1][pivotPosX];
+					if(tempValue.contentEquals(emptyVal))
+					{
+						board[pivotPosY-1][pivotPosX] = secondValue;
+					}
+					else
+					{
+						board[pivotPosY][pivotPosX] = emptyVal;
+						System.out.println("Overlapping Domino");
+					}
+				}
+				else if(rotation.contentEquals(rightCommand))
+				{
+					tempValue = board[pivotPosY][pivotPosX+1];
+					if(tempValue.contentEquals(emptyVal))
+					{
+						board[pivotPosY][pivotPosX+1] = secondValue;
+					}
+					else
+					{
+						board[pivotPosY][pivotPosX] = emptyVal;
+						System.out.println("Overlapping Domino");
+					}
+				}
+				else if(rotation.contentEquals(leftCommand))
+				{
+					tempValue = board[pivotPosY][pivotPosX-1];
+					if(tempValue.contentEquals(emptyVal))
+					{
+						board[pivotPosY][pivotPosX-1] = secondValue;
+					}
+					else
+					{
+						board[pivotPosY][pivotPosX] = emptyVal;
+						System.out.println("Overlapping Domino");
+					}
+				}
+			}
+			else
+			{
+				System.out.println("Overlapping Domino");
+			}
+		}
+	}
+	
+	public String toString()
+	{
+		String out = "";
+		for(int i = 0; i < board.length; i++)
+		{
+			for(int j = 0; j < board[i].length; j++)
+			{
+				out = out + board[i][j];
+			}
+			out = out + "\n";
+		}
+		return out;
+	}
+}
