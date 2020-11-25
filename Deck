@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class Deck {
+	
+	private String [] terrains;
+	private ArrayList<Domino> dominoes;
+	
+	public Deck(ArrayList<Domino> list)
+	{
+		terrains = new String[6];
+		terrains[0] = "pasture";
+		terrains[1] = "wheat field";
+		terrains[2] = "lake";
+		terrains[3] = "mountain/mine";
+		terrains[4] = "forest";
+		terrains[5] = "swamp";
+		
+		dominoes = list;
+		shuffle();
+	}	
+	
+	public String [] getTerrainList()
+	{
+		return terrains;
+	}
+	
+	public ArrayList<Domino> getDominoes()
+	{
+		return dominoes;
+	}
+	
+	public ArrayList<Domino> getNextFour()
+	{
+		ArrayList<Domino> four = new ArrayList<Domino>();
+		int i = 1;
+		while(dominoes.size() > 0 && 1 <= 4)
+		{
+			four.add(dominoes.remove(0));
+			i++;
+		}
+		return four;
+	}
+	
+	public void shuffle()
+	{
+		int index;
+		for(int i = 0; i < dominoes.size(); i++)
+		{
+			index = (int) (Math.random() * dominoes.size());
+			if(index != i)
+			{
+				Domino temp = dominoes.get(index);
+				dominoes.set(index, dominoes.get(i));
+				dominoes.set(i, temp);
+			}
+		}
+	}
+
+}
+
+
