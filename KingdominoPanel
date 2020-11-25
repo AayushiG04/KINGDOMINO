@@ -1,0 +1,839 @@
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.event.*;
+import java.awt.geom.*;
+import javax.swing.*;
+import javax.swing.Timer;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.Timer.*;
+import java.awt.geom.Ellipse2D;
+import java.util.concurrent.Executor;
+import java.util.*;
+
+public class KingdominoPanel extends JPanel implements MouseListener, ActionListener, KeyListener{
+	
+	public static final Color lightpurple = new Color(225, 194, 240);
+	public static final Color lightpink = new Color(255, 208, 233);
+	public static final Color lightblue = new Color(208, 221, 255);
+	public static final Color lightgreen = new Color(214, 255, 208);
+	public static final Color lime = new Color(219, 255, 117);
+	public static final Color lightyellow = new Color(255, 253, 178);
+	public static final Color lightbrown = new Color(224, 224, 224);
+	public static final Color teal = new Color(178, 246, 255);
+	public static final Color orange = new Color(255, 225, 178);
+	public static final Color maroon = new Color(199, 170, 170);
+	private Deck d;
+	private BufferedImage one, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, two, twenty, twentyone, twentytwo, twentythree, twentyfour, twentyfive, twentysix, twentyseven, twentyeight, twentynine, thirty, thirtyone, thirtytwo, thirtythree, thirtyfour, thirtyfive, thirtysix, thirtyseven, thirtyeight, thirtynine, four, three, fourty, fourtyone, fourtytwo, fourtythree, fourtyfour, fourtyfive, fourtysix, fourtyseven, fourtyeight, five, six, seven, eight, nine, title; 
+	private boolean instructions, pass, deck, scores, doStart, next, choose;
+	private ArrayList<Domino> doms;
+	private ArrayList<Domino> curFour;
+	private int [] turnOrder;
+	private boolean [] leftBoardClicks;
+	private boolean [] rightBoardClicks;
+	private ArrayList<ArrayList<Integer>> piecePlaces;
+	private int currentPlayer;
+	private ArrayList<BufferedImage> imgs;
+	private ArrayList<int []> coords;
+	private String direction;
+	private String newSide;
+	
+	public KingdominoPanel() throws IOException
+	{
+		addKeyListener(this);
+		setFocusable(true);
+		setFocusTraversalKeysEnabled(false);
+		doms = new ArrayList<Domino>();
+		try
+		{
+			one = ImageIO.read(KingdominoPanel.class.getResource("/Images/1.JPG"));
+			ten = ImageIO.read(KingdominoPanel.class.getResource("/Images/10.JPG"));
+			eleven = ImageIO.read(KingdominoPanel.class.getResource("/Images/11.JPG"));
+			twelve = ImageIO.read(KingdominoPanel.class.getResource("/Images/12.JPG"));
+			thirteen = ImageIO.read(KingdominoPanel.class.getResource("/Images/13.JPG"));
+			fourteen = ImageIO.read(KingdominoPanel.class.getResource("/Images/14.JPG"));
+			fifteen = ImageIO.read(KingdominoPanel.class.getResource("/Images/15.JPG"));
+			sixteen = ImageIO.read(KingdominoPanel.class.getResource("/Images/16.JPG"));
+			seventeen = ImageIO.read(KingdominoPanel.class.getResource("/Images/17.JPG"));
+			eighteen = ImageIO.read(KingdominoPanel.class.getResource("/Images/18.JPG"));
+			nineteen = ImageIO.read(KingdominoPanel.class.getResource("/Images/19.JPG"));
+			twenty = ImageIO.read(KingdominoPanel.class.getResource("/Images/20.JPG"));
+			two = ImageIO.read(KingdominoPanel.class.getResource("/Images/2.JPG"));
+			twentyone = ImageIO.read(KingdominoPanel.class.getResource("/Images/21.JPG"));
+			twentytwo = ImageIO.read(KingdominoPanel.class.getResource("/Images/22.JPG"));
+			twentythree = ImageIO.read(KingdominoPanel.class.getResource("/Images/23.JPG"));
+			twentyfour = ImageIO.read(KingdominoPanel.class.getResource("/Images/24.JPG"));
+			twentyfive = ImageIO.read(KingdominoPanel.class.getResource("/Images/25.JPG"));
+			twentysix = ImageIO.read(KingdominoPanel.class.getResource("/Images/26.JPG"));
+			twentyseven = ImageIO.read(KingdominoPanel.class.getResource("/Images/27.JPG"));
+			twentyeight = ImageIO.read(KingdominoPanel.class.getResource("/Images/28.JPG"));
+			twentynine = ImageIO.read(KingdominoPanel.class.getResource("/Images/29.JPG"));
+			three = ImageIO.read(KingdominoPanel.class.getResource("/Images/3.JPG"));
+			thirty = ImageIO.read(KingdominoPanel.class.getResource("/Images/30.JPG"));
+			thirtyone = ImageIO.read(KingdominoPanel.class.getResource("/Images/31.JPG"));
+			thirtytwo = ImageIO.read(KingdominoPanel.class.getResource("/Images/32.JPG"));
+			thirtythree = ImageIO.read(KingdominoPanel.class.getResource("/Images/33.JPG"));
+			thirtyfour = ImageIO.read(KingdominoPanel.class.getResource("/Images/34.JPG"));
+			thirtyfive = ImageIO.read(KingdominoPanel.class.getResource("/Images/35.JPG"));
+			thirtysix = ImageIO.read(KingdominoPanel.class.getResource("/Images/36.JPG"));
+			thirtyseven = ImageIO.read(KingdominoPanel.class.getResource("/Images/37.JPG"));
+			thirtyeight = ImageIO.read(KingdominoPanel.class.getResource("/Images/38.JPG"));
+			thirtynine = ImageIO.read(KingdominoPanel.class.getResource("/Images/39.JPG"));
+			four = ImageIO.read(KingdominoPanel.class.getResource("/Images/4.JPG"));
+			fourty = ImageIO.read(KingdominoPanel.class.getResource("/Images/40.JPG"));
+			fourtyone = ImageIO.read(KingdominoPanel.class.getResource("/Images/41.JPG"));
+			fourtytwo = ImageIO.read(KingdominoPanel.class.getResource("/Images/42.JPG"));
+			fourtythree = ImageIO.read(KingdominoPanel.class.getResource("/Images/43.JPG"));
+			fourtyfour = ImageIO.read(KingdominoPanel.class.getResource("/Images/44.JPG"));
+			fourtyfive = ImageIO.read(KingdominoPanel.class.getResource("/Images/45.JPG"));
+			fourtysix = ImageIO.read(KingdominoPanel.class.getResource("/Images/46.JPG"));
+			fourtyseven = ImageIO.read(KingdominoPanel.class.getResource("/Images/47.JPG"));
+			fourtyeight = ImageIO.read(KingdominoPanel.class.getResource("/Images/48.JPG"));
+			five = ImageIO.read(KingdominoPanel.class.getResource("/Images/5.JPG"));
+			six = ImageIO.read(KingdominoPanel.class.getResource("/Images/6.JPG"));
+			seven = ImageIO.read(KingdominoPanel.class.getResource("/Images/7.JPG"));
+			eight = ImageIO.read(KingdominoPanel.class.getResource("/Images/8.JPG"));
+			nine = ImageIO.read(KingdominoPanel.class.getResource("/Images/9.JPG"));
+			title = ImageIO.read(KingdominoPanel.class.getResource("/Images/kingdomino title.png"));
+			
+			
+		}
+		catch(Exception E)
+		{
+			System.out.println("Exception Error");
+		}
+		
+		addMouseListener(this);
+		direction = "left";
+		newSide = "right";
+		instructions = false;
+		pass = false;
+		scores = false;
+		deck = false;
+		next = false;
+		choose = false;
+		fillDoms();
+		d = new Deck(doms);
+		d.shuffle();
+		curFour = new ArrayList<Domino>();
+		curFour = d.getNextFour();
+		turnOrder = new int[4];
+		doStart = true;
+		leftBoardClicks = new boolean[4];
+		rightBoardClicks = new boolean[4];
+		piecePlaces = new ArrayList<>();
+		int tempx = 600;
+		int tempy = 650;
+		for(int i = 0; i < leftBoardClicks.length; i++)
+		{
+			leftBoardClicks[i] = false;
+			rightBoardClicks[i] = false;
+			ArrayList<Integer> temp = new ArrayList<Integer>();
+			temp.add(tempx);
+			temp.add(tempy);
+			piecePlaces.add(temp);
+			tempy += 60;
+		}
+		currentPlayer = 0;
+		imgs = new ArrayList<BufferedImage>();
+		coords = new ArrayList<>();
+	}
+		
+	
+	public void paint(Graphics g)
+	{ 
+		System.out.println(getWidth());
+		System.out.println(getHeight());
+		drawButtons(g);
+		g.drawImage(title, getWidth()*670/1920, getHeight()*9/1080, getWidth()*650/1920, getHeight()*150/1080, null);
+		
+//		if(next)
+//		{
+//			if(direction.equals("left"))
+//			{
+				g.drawImage(curFour.get(0).getImage(), getWidth()*750/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				g.drawImage(curFour.get(1).getImage(), getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				g.drawImage(curFour.get(2).getImage(), getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				g.drawImage(curFour.get(3).getImage(), getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				direction = "right";
+			//	curFour = d.getNextFour();
+//			}
+//			else
+//			{
+				g.drawImage(curFour.get(0).getImage(), getWidth()*1000/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				g.drawImage(curFour.get(1).getImage(), getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				g.drawImage(curFour.get(2).getImage(), getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				g.drawImage(curFour.get(3).getImage(), getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080, null);
+				direction = "left";
+			//	curFour = d.getNextFour();
+//			}
+//		}
+		
+		Graphics2D g2 = (Graphics2D) g;
+	    g2.setStroke(new BasicStroke(3));
+	    g.drawRect(getWidth()*750/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+		g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+		g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+		g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+		
+		g.drawRect(getWidth()*1000/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+		g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+		g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+		g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+		
+		
+		 g2.setStroke(new BasicStroke(6));
+		if(currentPlayer == 0)
+		{
+			g.drawString("PINK PLAYER'S TURN",  getWidth()*400/1920, getHeight()*700/1080);
+			if(leftBoardClicks[0] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[1] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[2] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[3] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			if(rightBoardClicks[0] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[1] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[2] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[3] == true)
+			{
+				g.setColor(Color.pink);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			
+			for(int i = 0; i < leftBoardClicks.length; i++)
+			{
+				leftBoardClicks[i] = false;
+				rightBoardClicks[i] = false;
+			}
+		}
+		else if(currentPlayer == 1)
+		{
+			g.drawString("YELLOW PLAYER'S TURN",  getWidth()*400/1920, getHeight()*700/1080);
+			
+			if(leftBoardClicks[0] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[1] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[2] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[3] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			if(rightBoardClicks[0] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[1] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[2] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[3] == true)
+			{
+				g.setColor(Color.yellow);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			
+			for(int i = 0; i < leftBoardClicks.length; i++)
+			{
+				leftBoardClicks[i] = false;
+				rightBoardClicks[i] = false;
+			}
+		}
+		else if(currentPlayer == 2)
+		{
+			g.drawString("GREEN PLAYER'S TURN",  getWidth()*400/1920, getHeight()*700/1080);
+			
+			if(leftBoardClicks[0] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[1] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[2] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[3] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			if(rightBoardClicks[0] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[1] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[2] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[3] == true)
+			{
+				g.setColor(Color.green);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			
+			for(int i = 0; i < leftBoardClicks.length; i++)
+			{
+				leftBoardClicks[i] = false;
+				rightBoardClicks[i] = false;
+			}
+			
+		}
+		else if(currentPlayer == 3)
+		{
+			g.drawString("BLUE PLAYER'S TURN",  getWidth()*400/1920, getHeight()*700/1080);
+			
+			if(leftBoardClicks[0] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[1] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[2] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(leftBoardClicks[3] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*750/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			if(rightBoardClicks[0] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[1] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[2] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			else if(rightBoardClicks[3] == true)
+			{
+				g.setColor(Color.blue);
+				g.drawRect(getWidth()*1000/1920, getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080, getWidth()*150/1920, getHeight()*75/1080);
+			}
+			
+//			for(int i = 0; i < leftBoardClicks.length; i++)
+//			{
+//				leftBoardClicks[i] = false;
+//				rightBoardClicks[i] = false;
+//			}
+		}
+		
+	}
+	
+//		public boolean checkCords(int xcord, int ycord) {
+//		
+//		Domino[][] kingdom = new Domino[10][10]; // replace this with the 10x10 kingdom
+//		for (int r = 0; r < kingdom.length; r++) {
+//			for (int c = 0; c < kingdom[r].length; c++) {
+//				
+//				Domino temp = Domino[r][c];
+//				
+//				int xc = temp.getX(), yc = temp[r][c].getY(), xct = temp.getX2(),yct = temp.getY2();
+//				
+//				if(xcord >= xc &&  ycord >= yc && xcord <= xct && ycord <= yct) {
+//					return true;
+//				}
+//					
+//				}
+//				
+//				
+//			}
+//		return false;
+//		}
+		
+//		public void move(Graphics g, BufferedImage img, int x, int y, String voh, String direction) {
+//			
+//			if (voh.toLowerCase().equals("v")) {
+//				
+//				int hm = getWidth()/24, vm = getHeight()/6;
+//				
+//				if(direction == ("r")) { 
+//					
+//					if(checkCords(x+hm, y) == true) {
+//						g.drawImage(img, x+hm, y, hm, vm, null);
+//						}
+//					
+//					} else if (direction == ("l") == true) { 
+//						
+//						if(checkCords(x-hm, y)) {
+//							g.drawImage(img, x-hm, y, hm, vm, null);
+//						}
+//						
+//					} else if (direction == ("u")) { 
+//						
+//						if(checkCords(x, y-vm) == true) {
+//							g.drawImage(img, x, y-vm, hm, vm, null);
+//						}
+//						
+//					
+//					} else if (direction == ("d")) { 
+//						
+//						if(checkCords(x, y+vm)) {
+//							g.drawImage(img, x, y+vm, hm, vm, null);
+//						}
+//						
+//				} else System.out.println("Invalid Direction.");
+//				
+//			} else if (voh.toLowerCase() == ("h")) {
+//				
+//				int hm = getWidth()/12, vm = getHeight()/12;
+//				
+//				if(direction == ("r")) { 
+//					
+//					if(checkCords(x + hm, y) == true) {
+//						g.drawImage(img, x+hm, y, hm, vm, null); 
+//					}
+//					
+//						
+//					} else if (direction == ("l")) { 
+//						
+//						if(checkCords(x-hm, y) == true) {
+//							g.drawImage(img, x-hm, y, hm, vm, null);
+//						}
+//						
+//						
+//					} else if (direction == ("u")) { 
+//						
+//						if(checkCords(x, y-vm) == true) {
+//							g.drawImage(img, x, y-vm, hm, vm, null);
+//						}
+//						
+//						
+//					} else if (direction == ("d")) { 
+//						
+//						if(checkCords(x, y+vm) == true) {
+//							g.drawImage(img, x, y+vm, hm, vm, null);
+//						}
+//						
+//						
+//				} else System.out.println("Invalid Direction.");
+//			}
+//			
+//			}
+	
+	public void drawButtons(Graphics g)
+	{
+		
+		//System.out.println("hi");
+		Graphics2D g2 = (Graphics2D) g;
+	    g2.setStroke(new BasicStroke(3));
+	    
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		//System.out.println("hi again");
+		
+		g.setColor(lightpurple);
+		g.fillRect(getWidth() - (getWidth()*350/1920), getHeight()*800/1080, getWidth()*300/1920, getHeight()*150/1080);
+		g.drawRect(getWidth() - (getWidth()*350/1920), getHeight()*800/1080, getWidth()*300/1920, getHeight()*150/1080);
+		Font f = new Font("Times New Roman", 0, getHeight()*30/1080);
+		g.setFont(f);
+		g.setColor(Color.BLACK);
+		g2.drawString("CLICK TO SEE", getWidth() - (getWidth()*315/1920), getHeight()*865/1080);
+		g.drawString("INSTRUCTIONS", getWidth() - (getWidth()*315/1920), getHeight()*905/1080);
+		g2.drawRect(getWidth() - (getWidth()*350/1920), getHeight()*800/1080, getWidth()*300/1920, getHeight()*150/1080);
+		
+		g.setColor(lightbrown);
+		g.fillRect(getWidth() - (getWidth()*1890/1920), getHeight()*800/1080, getWidth()*300/1920, getHeight()*150/1080);
+		g.drawRect(getWidth() - (getWidth()*1890/1920), getHeight()*800/1080, getWidth()*300/1920, getHeight()*150/1080);
+		Font f2 = new Font("Times New Roman", 0, getHeight()*30/1080);
+		g.setFont(f2);
+		g.setColor(Color.BLACK);
+		g2.drawString("CLICK TO GET", getWidth() - (getWidth()*1855/1920), getHeight()*865/1080);
+		g.drawString("NEXT DOMINOES", getWidth() - (getWidth()*1855/1920), getHeight()*905/1080);
+		g2.drawRect(getWidth() - (getWidth()*1890/1920), getHeight()*800/1080, getWidth()*300/1920, getHeight()*150/1080);
+		
+		g.setColor(lightpink);
+		g.fillRect(getWidth()*7/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		g.setColor(lightyellow);
+		g.fillRect(getWidth()*484/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		g.setColor(lightgreen);
+		g.fillRect(getWidth()*961/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		g.setColor(lightblue);
+		g.fillRect(getWidth()*1438/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		g.setColor(Color.black);
+		g2.drawRect(getWidth()*7/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		g2.drawRect(getWidth()*484/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		g2.drawRect(getWidth()*961/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		g2.drawRect(getWidth()*1438/1920, getHeight()*160/1080, getWidth()*470/1920, getHeight()*470/1080);
+		
+		g2.setStroke(new BasicStroke(1));
+		g.drawLine(getWidth()*7/1920, getHeight()*207/1080, getWidth()*1913/1920, getHeight()*207/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*254/1080, getWidth()*1913/1920, getHeight()*254/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*301/1080, getWidth()*1913/1920, getHeight()*301/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*348/1080, getWidth()*1913/1920, getHeight()*348/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*395/1080, getWidth()*1913/1920, getHeight()*395/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*442/1080, getWidth()*1913/1920, getHeight()*442/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*489/1080, getWidth()*1913/1920, getHeight()*489/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*536/1080, getWidth()*1913/1920, getHeight()*536/1080);
+		g.drawLine(getWidth()*7/1920, getHeight()*583/1080, getWidth()*1913/1920, getHeight()*583/1080);
+		
+		g.drawLine(getWidth()*54/1920, getHeight()*160/1080, getWidth()*54/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*101/1920, getHeight()*160/1080, getWidth()*101/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*148/1920, getHeight()*160/1080, getWidth()*148/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*195/1920, getHeight()*160/1080, getWidth()*195/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*242/1920, getHeight()*160/1080, getWidth()*242/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*289/1920, getHeight()*160/1080, getWidth()*289/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*336/1920, getHeight()*160/1080, getWidth()*336/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*383/1920, getHeight()*160/1080, getWidth()*383/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*430/1920, getHeight()*160/1080, getWidth()*430/1920, getHeight()*630/1080);
+		
+		g.drawLine(getWidth()*531/1920, getHeight()*160/1080, getWidth()*531/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*578/1920, getHeight()*160/1080, getWidth()*578/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*625/1920, getHeight()*160/1080, getWidth()*625/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*672/1920, getHeight()*160/1080, getWidth()*672/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*719/1920, getHeight()*160/1080, getWidth()*719/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*766/1920, getHeight()*160/1080, getWidth()*766/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*813/1920, getHeight()*160/1080, getWidth()*813/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*860/1920, getHeight()*160/1080, getWidth()*860/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*907/1920, getHeight()*160/1080, getWidth()*907/1920, getHeight()*630/1080);
+		
+		g.drawLine(getWidth()*1008/1920, getHeight()*160/1080, getWidth()*1008/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1055/1920, getHeight()*160/1080, getWidth()*1055/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1102/1920, getHeight()*160/1080, getWidth()*1102/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1149/1920, getHeight()*160/1080, getWidth()*1149/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1196/1920, getHeight()*160/1080, getWidth()*1196/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1243/1920, getHeight()*160/1080, getWidth()*1243/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1290/1920, getHeight()*160/1080, getWidth()*1290/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1337/1920, getHeight()*160/1080, getWidth()*1337/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1384/1920, getHeight()*160/1080, getWidth()*1384/1920, getHeight()*630/1080);
+		
+		g.drawLine(getWidth()*1485/1920, getHeight()*160/1080, getWidth()*1485/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1532/1920, getHeight()*160/1080, getWidth()*1532/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1579/1920, getHeight()*160/1080, getWidth()*1579/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1626/1920, getHeight()*160/1080, getWidth()*1626/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1673/1920, getHeight()*160/1080, getWidth()*1673/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1720/1920, getHeight()*160/1080, getWidth()*1720/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1767/1920, getHeight()*160/1080, getWidth()*1767/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1814/1920, getHeight()*160/1080, getWidth()*1814/1920, getHeight()*630/1080);
+		g.drawLine(getWidth()*1861/1920, getHeight()*160/1080, getWidth()*1861/1920, getHeight()*630/1080);
+		
+		g.setColor(teal);
+		g.fillRect(getWidth() - (getWidth()*1890/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		g.drawRect(getWidth() - (getWidth()*1890/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		Font f3 = new Font("Times New Roman", 0, getHeight()*30/1080);
+		g.setFont(f3);
+		g.setColor(Color.BLACK);
+		g.drawString("PASS", getWidth() - (getWidth()*1850/1920), getHeight()*730/1080);
+		g2.setStroke(new BasicStroke(3));
+		g2.drawRect(getWidth() - (getWidth()*1890/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		
+		g.setColor(orange);
+		g.fillRect(getWidth() - (getWidth()*350/1920) + (getWidth()*150/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		g.drawRect(getWidth() - (getWidth()*350/1920) + (getWidth()*150/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		Font f4 = new Font("Times New Roman", 0, getHeight()*30/1080);
+		g.setFont(f4);
+		g.setColor(Color.BLACK);
+		g.drawString("SCORES", getWidth() - (getWidth()*180/1920), getHeight()*730/1080);
+		g2.setStroke(new BasicStroke(3));
+		g2.drawRect(getWidth() - (getWidth()*350/1920) + (getWidth()*150/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		
+		g.setColor(lime);
+		g.fillRect(getWidth() - (getWidth()*505/1920) + (getWidth()*150/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		g.drawRect(getWidth() - (getWidth()*505/1920) + (getWidth()*150/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		Font f5 = new Font("Times New Roman", 0, getHeight()*30/1080);
+		g.setFont(f5);
+		g.setColor(Color.BLACK);
+		g.drawString("NEXT", getWidth() - (getWidth()*320/1920), getHeight()*730/1080);
+		g2.setStroke(new BasicStroke(3));
+		g2.drawRect(getWidth() - (getWidth()*505/1920) + (getWidth()*150/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		
+		g.setColor(maroon);
+		g.fillRect(getWidth() - (getWidth()*1735/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		g.drawRect(getWidth() - (getWidth()*1735/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+		Font f6 = new Font("Times New Roman", 0, getHeight()*30/1080);
+		g.setFont(f6);
+		g.setColor(Color.BLACK);
+		g.drawString("CHOOSE", getWidth() - (getWidth()*1710/1920), getHeight()*730/1080);
+		g2.setStroke(new BasicStroke(3));
+		g2.drawRect(getWidth() - (getWidth()*1735/1920), getHeight()*640/1080, getWidth()*150/1920, getHeight()*150/1080);
+	}
+
+
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void mouseClicked(MouseEvent e) {
+		
+		int x = e.getX();
+		int y = e.getY();
+		
+		if(e.getButton() == e.BUTTON1)
+		{
+			if(x >= getWidth() - (getWidth()*1890/1920) && x <= getWidth() - (getWidth()*1890/1920) + getWidth()*150/1920 && y >= getHeight()*640/1080 && y <= getHeight()*640/1080 + getHeight()*150/1080)
+			{
+				pass = true;
+				System.out.println("pass");
+				repaint();
+			}
+			else if(x >= getWidth() - (getWidth()*1890/1920) && x <= getWidth() - (getWidth()*1890/1920) + getWidth()*300/1920 && y >= getHeight()*800/1080 && y <= getHeight()*800/1080 + getHeight()*150/1080)
+			{
+				deck = true;
+				System.out.println("deck");
+				repaint();
+			}
+			else if(x >= getWidth() - (getWidth()*350/1920) + (getWidth()*150/1920) && x <= getWidth() - (getWidth()*350/1920) + (getWidth()*150/1920) + getWidth()*150/1920 && y >= getHeight()*640/1080 && y <= getHeight()*640/1080 + getHeight()*150/1080)
+			{
+				scores = true;
+				System.out.println("scores");
+				repaint();
+			}
+			else if(x >= getWidth() - (getWidth()*350/1920) && x <= getWidth() - (getWidth()*350/1920) + getWidth()*300/1920 && y >= getHeight()*800/1080 && y <= getHeight()*800/1080 + getHeight()*150/1080)
+			{
+				instructions = true;
+				System.out.println("instructions");
+				repaint();
+			}
+			else if(x >= getWidth() - (getWidth()*505/1920) + (getWidth()*150/1920) && x <= getWidth() - (getWidth()*505/1920) + (getWidth()*150/1920) + getWidth()*150/1920 && y >= getHeight()*640/1080 && y <= getHeight()*640/1080 + getHeight()*150/1080)
+			{
+				next = true;
+				System.out.println("next");
+				if(currentPlayer == 3)
+				{
+					currentPlayer = 0;
+				}
+				else
+				{
+					currentPlayer++;
+				}
+				repaint();
+			}
+			else if(x >= getWidth() - (getWidth()*1735/1920) && x <= getWidth() - (getWidth()*1735/1920) + getWidth()*150/1920 && y >= getHeight()*640/1080 && y <= getHeight()*640/1080 + getHeight()*150/1080)
+			{
+				choose = true;
+				System.out.println("choose");
+				repaint();
+			}
+			else if(x >= getWidth()*1000/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 && y <= getHeight()*645/1080 + getHeight()*75/1080)
+			{
+				rightBoardClicks[0] = true;
+				System.out.println("1");
+				repaint();
+			}
+			else if(x >= getWidth()*1000/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 + getHeight()*80/1080 && y <= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*75/1080)
+			{
+				rightBoardClicks[1] = true;
+				System.out.println("2");
+				repaint();
+			}
+			else if(x >= getWidth()*1000/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 && y <= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*75/1080)
+			{
+				rightBoardClicks[2] = true;
+				System.out.println("3");
+				repaint();
+			}
+			else if(x >= getWidth()*1000/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080 && y <= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*75/1080)
+			{
+				rightBoardClicks[3] = true;
+				System.out.println("4");
+				repaint();
+			}
+			else if(x >= getWidth()*750/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 && y <= getHeight()*645/1080 + getHeight()*75/1080)
+			{
+				leftBoardClicks[0] = true;
+				System.out.println("1");
+				repaint();
+			}
+			else if(x >= getWidth()*750/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 + getHeight()*80/1080 && y <= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*75/1080)
+			{
+				leftBoardClicks[1] = true;
+				System.out.println("2");
+				repaint();
+			}
+			else if(x >= getWidth()*750/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 && y <= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*75/1080)
+			{
+				leftBoardClicks[2] = true;
+				System.out.println("3");
+				repaint();
+			}
+			else if(x >= getWidth()*750/1920 && x <= getWidth()*1000/1920 + getWidth()*150/1920 && y >= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080 && y <= getHeight()*645/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*80/1080 + getHeight()*75/1080)
+			{
+				leftBoardClicks[3] = true;
+				System.out.println("4");
+				repaint();
+			}
+			
+		}
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void fillDoms() //SOME HAVE MORE THAN ONE BROWN BUT I ALREADY MADE IT A BOOLEAN AND I DONT HAVE THE ENERGY TO CHANGE IT
+						   //SO IF YOU WANT TO DO IT,, BE MY GUEST :(
+	{
+		doms.add(new Domino(one, 1, new Square(false, "desert"), new Square(false, "desert")));
+		doms.add(new Domino(two, 2, new Square(false, "desert"), new Square(false, "desert")));
+		doms.add(new Domino(three, 3, new Square(false, "tree"), new Square(false, "tree")));
+		doms.add(new Domino(four, 4, new Square(false, "tree"), new Square(false, "tree")));
+		doms.add(new Domino(five, 1, new Square(false, "tree"), new Square(false, "tree")));
+		doms.add(new Domino(six, 1, new Square(false, "tree"), new Square(false, "tree")));
+		doms.add(new Domino(seven, 1, new Square(false, "water"), new Square(false, "water")));
+		doms.add(new Domino(eight, 1, new Square(false, "water"), new Square(false, "water")));
+		doms.add(new Domino(nine, 1, new Square(false, "water"), new Square(false, "water")));
+		doms.add(new Domino(ten, 1, new Square(false, "grass"), new Square(false, "grass")));
+		doms.add(new Domino(eleven, 1, new Square(false, "grass"), new Square(false, "grass")));
+		doms.add(new Domino(twelve, 1, new Square(false, "ew"), new Square(false, "ew")));
+		doms.add(new Domino(thirteen, 1, new Square(false, "desert"), new Square(false, "tree")));
+		doms.add(new Domino(fourteen, 1, new Square(false, "desert"), new Square(false, "water")));
+		doms.add(new Domino(fifteen, 1, new Square(false, "desert"), new Square(false, "grass")));
+		doms.add(new Domino(sixteen, 1, new Square(false, "desert"), new Square(false, "ew")));
+		doms.add(new Domino(seventeen, 1, new Square(false, "tree"), new Square(false, "water")));
+		doms.add(new Domino(eighteen, 1, new Square(false, "tree"), new Square(false, "grass")));
+		doms.add(new Domino(nineteen, 1, new Square(true, "desert"), new Square(false, "tree")));
+		doms.add(new Domino(twenty, 1, new Square(true, "desert"), new Square(false, "water")));
+		doms.add(new Domino(twentyone, 1, new Square(true, "desert"), new Square(false, "grass")));
+		doms.add(new Domino(twentytwo, 1, new Square(true, "desert"), new Square(false, "ew")));
+		doms.add(new Domino(twentythree, 1, new Square(true, "desert"), new Square(false, "black")));
+		doms.add(new Domino(twentyfour, 1, new Square(false, "tree"), new Square(false, "desert")));
+		doms.add(new Domino(twentyfive, 1, new Square(true, "desert"), new Square(false, "grass")));
+		doms.add(new Domino(twentysix, 1, new Square(true, "desert"), new Square(false, "ew")));
+		doms.add(new Domino(twentyseven, 1, new Square(true, "desert"), new Square(false, "black")));
+		doms.add(new Domino(twentyeight, 1, new Square(true, "tree"), new Square(false, "desert")));
+		doms.add(new Domino(twentynine, 1, new Square(true, "tree"), new Square(false, "desert")));
+		doms.add(new Domino(thirty, 1, new Square(true, "tree"), new Square(false, "desert")));
+		doms.add(new Domino(thirtyone, 1, new Square(true, "tree"), new Square(false, "desert")));
+		doms.add(new Domino(thirtytwo, 1, new Square(true, "water"), new Square(false, "tree")));
+		doms.add(new Domino(thirtythree, 1, new Square(true, "water"), new Square(false, "tree")));
+		doms.add(new Domino(thirtyfour, 1, new Square(true, "water"), new Square(false, "tree")));
+		doms.add(new Domino(thirtyfive, 1, new Square(true, "desert"), new Square(false, "grass")));
+		doms.add(new Domino(thirtysix, 1, new Square(false, "desert"), new Square(false, "grass")));
+		doms.add(new Domino(thirtyseven, 1, new Square(false, "water"), new Square(true, "grass")));
+		doms.add(new Domino(thirtyeight, 1, new Square(false, "desert"), new Square(true, "ew")));
+		doms.add(new Domino(thirtynine, 1, new Square(false, "grass"), new Square(true, "ew")));
+		doms.add(new Domino(fourty, 1, new Square(true, "black"), new Square(false, "desert")));
+		doms.add(new Domino(fourtyone, 1, new Square(false, "desert"), new Square(true, "grass")));
+		doms.add(new Domino(fourtytwo, 1, new Square(false, "water"), new Square(true, "grass")));
+		doms.add(new Domino(fourtythree, 1, new Square(false, "desert"), new Square(true, "ew")));
+		doms.add(new Domino(fourtyfour, 1, new Square(false, "grass"), new Square(true, "ew")));
+		doms.add(new Domino(fourtyfive, 1, new Square(true, "black"), new Square(false, "desert")));
+		doms.add(new Domino(fourtyeight, 1, new Square(false, "ew"), new Square(true, "black")));
+		doms.add(new Domino(fourtyseven, 1, new Square(false, "ew"), new Square(true, "black")));
+		doms.add(new Domino(fourtyeight, 1, new Square(true, "desert"), new Square(false, "black")));
+	
+		
+	}
+	
+
+}
+	
